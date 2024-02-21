@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Converter</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 p-6 w-full min-h-screen">
+    <div class="text-center max-w-xl mx-auto">
+        <header class="mb-4">
+            <img src="{{ url_for('static', filename='header_image_01.webp') }}" alt="Header Image" class="w-full max-w-md mx-auto h-auto">
+            <h1 class="text-3xl font-semibold text-white mt-2">Text Converter</h1>
+        </header>
+        <form method="post" action="{{ url_for('index') }}" class="mb-4">
+            <input type="text" name="inputText" id="inputText" placeholder="Enter text here" class="p-3 rounded w-full max-w-md mx-auto text-gray-800">
+            <input type="submit" value="Generate Text" class="bg-green-400 hover:bg-green-600 text-gray-900 font-bold py-2 px-4 rounded transition duration-200 mt-4">
+        </form>
+        {% if vysledky %}
+            <div class="flex flex-col items-center w-full">
+                <table class="table-auto bg-gray-800 text-white rounded-lg shadow">
+                    <thead class="bg-gray-700">
+                        <tr>
+                            <th class="px-20 py-2 text-left">Description</th>
+                            <th class="px-4 py-2 text-left">Result</th>
+                            <th class="px-10 py-2 text-left">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for popis, vysledok in vysledky %}
+                            <tr>
+                                <td class="border-t border-gray-700 text-green px-4 py-2 text-left">{{ popis }}</td>
+                                <td class="border-t border-gray-700 px-4 py-2 text-left" id="result-{{ loop.index }}">{{ vysledok }}</td>
+                                <td class="border-t border-gray-700 px-4 py-2">
+                                    <button onclick="copyToClipboard('result-{{ loop.index }}', this)" class="bg-green-400 hover:bg-green-600 text-black font-semibold py-1 px-2 rounded transition duration-200">
+                                        Copy
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- Tlačidlo na vyčistenie výsledkov sa presunie sem, ale jeho funkčnosť sa zmení -->
+                <button onclick="clearResults()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-200 mt-4">
+                    Clear Results
+                </button>
+            </div>
+        {% endif %}
+    </div>
+    <script>
+        function copyToClipboard(elementId, button) {
+            var text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                button.textContent = 'Copied';
+                setTimeout(() => button.textContent = 'Copy', 2000);
+            }).catch(function(err) {
+                console.error('Could not copy text: ', err);
+            });
+        }
+
+        function clearResults() {
+            // Simulácia čistenia výsledkov bez presmerovania
+            document.location.href = '{{ url_for("index") }}';
+        }
+    </script>
+</body>
+</html>
