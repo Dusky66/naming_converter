@@ -27,6 +27,3 @@ def index():
             pripony = ["", "_Target", "_Source", "_Content_TEST", "_Audience_TEST"]
             vysledky = [(descriptions[i], processed_text + pripona) for i, pripona in enumerate(pripony)]
     return render_template('index.html', vysledky=vysledky)
-
-if __name__ == '__main__':
-    app.run(debug=True)
